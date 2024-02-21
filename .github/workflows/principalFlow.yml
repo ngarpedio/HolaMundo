@@ -29,11 +29,11 @@ jobs:
           node-version: '18.18.0'
           
       - name: INSTALL SFDX 
-        run: |
-          npm install @salesforce/cli@2.24.4 --global
-          sfdx --version 
+        run: npm install @salesforce/cli@2.24.4 --global
+      - name: Version
+        run: sf --version  
       - name: Auth Dev Hub
-        run: SF_ACCESS_TOKEN=00DWV000000xVuD!AQEAQB_vMbhQVg6uTXLm02fvOPPZjQuBH.7IcyistlV2fvbGZDdS2wLKo9keTinW4H0YKnnoin20VYVk2hcmTm.MdxY5Yo0Y sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt --set-default-dev-hub 
+        run: SF_ACCESS_TOKEN=00DWV000000xVuD!AQEAQB_vMbhQVg6uTXLm02fvOPPZjQuBH.7IcyistlV2fvbGZDdS2wLKo9keTinW4H0YKnnoin20VYVk2hcmTm.MdxY5Yo0Y sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --alias devHub --no-prompt --set-default-dev-hub 
       - name: Create scratch
-        run: sfdx force:org:create edition=Enterprise -a MyScratchOrg -d "1" -w "15"
+        run: sf org create scratch --edition enterprise  --target-dev-hub devHub --alias MyScratchOrg --duration-days 1 --wait 15 --json
 
