@@ -23,11 +23,16 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3 
-      - name: Install node
-        run: npm install node
-      - name: Install sf cli 
-        run: npm install @salesforce/cli --global  
+      - name: NODE INSTALL OVERWRITE FOR ISSUE https://github.com/forcedotcom/cli/issues/2125
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.14.2'
+          
+      - name: INSTALL SFDX 
+        run: |
+          npm install sfdx-cli --global
+          sfdx --version
+          
       - name: Auth Dev Hub
         run: SF_ACCESS_TOKEN=00DWV000000xVuD!AQEAQB_vMbhQVg6uTXLm02fvOPPZjQuBH.7IcyistlV2fvbGZDdS2wLKo9keTinW4H0YKnnoin20VYVk2hcmTm.MdxY5Yo0Y sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt --set-default-dev-hub 
       - name: Create scratch
