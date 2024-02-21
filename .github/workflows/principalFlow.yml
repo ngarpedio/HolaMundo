@@ -41,6 +41,6 @@ jobs:
       - name: Run sf devhub org login
         run: sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt
         env:
-          SF_ACCESS_TOKEN: 00DWV000000xVuD!OdFFB0hs6LYw2ZaeuS6kIvmJF
+          SF_ACCESS_TOKEN: "00DWV000000xVuD!OdFFB0hs6LYw2ZaeuS6kIvmJF"
       - name: create scratch
         run: sf org create scratch --definition-file matrix-scratch-def.json --set-default --duration-days 3
