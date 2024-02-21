@@ -39,6 +39,6 @@ jobs:
       - name: Install SF CLI
         run: npm install @salesforce/cli --global
       - name: Set access token
-        run: sf env var set SF_ACCESS_TOKEN=00DWV000000xVuD!OdFFB0hs6LYw2ZaeuS6kIvmJF 
+        run: sf config set SF_ACCESS_TOKEN 00DWV000000xVuD!OdFFB0hs6LYw2ZaeuS6kIvmJF --global
       - name: Auth Dev Hub
         run: sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt
