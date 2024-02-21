@@ -26,13 +26,11 @@ jobs:
       - name: NODE INSTALL OVERWRITE FOR ISSUE https://github.com/forcedotcom/cli/issues/2125
         uses: actions/setup-node@v3
         with:
-          node-version: '18.14.2'
+          node-version: '18.18.0'
           
       - name: INSTALL SFDX 
         run: |
-          npm install @salesforce/cli --global
-          sfdx --version
-          sfdx update
+          npm install salesforce/cli@2.24.4 --global
           sfdx --version 
       - name: Auth Dev Hub
         run: SF_ACCESS_TOKEN=00DWV000000xVuD!AQEAQB_vMbhQVg6uTXLm02fvOPPZjQuBH.7IcyistlV2fvbGZDdS2wLKo9keTinW4H0YKnnoin20VYVk2hcmTm.MdxY5Yo0Y sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt --set-default-dev-hub 
