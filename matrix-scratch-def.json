@@ -1,22 +1,19 @@
 {
-    "orgName": "Arpedio Sales Dev",
-    "edition": "Enterprise", 
-    "settings": {
-        "securitySettings": {
-            "sessionSettings": {
-                "sessionTimeout": "TwelveHours"
-            },
-            "enableAdminLoginAsAnyUser": true
-        },
-        "apexSettings": {
-            "enableCompileOnDeploy": false
-        },
-        "mobileSettings": {
-            "enableS1EncryptedStoragePref2": false
-        },
-        "languageSettings": {
-            "enableTranslationWorkbench": true
-        }
-    },
-    "features" : ["ProviderFreePlatformCache","ForceComPlatform"]
+  "orgName": "Acme",
+  "edition": "Enterprise",
+  "features": ["Communities", "ServiceCloud", "Chatbot"],
+  "settings": {
+      "communitiesSettings": {
+          "enableNetworksEnabled": true
+      },
+      "mobileSettings": {
+          "enableS1EncryptedStoragePref2": true
+      },
+      "omniChannelSettings": {
+          "enableOmniChannel": true
+      },
+      "caseSettings": {
+          "systemUserEmail": "support@acme.com"
+      }
+  }
 }
