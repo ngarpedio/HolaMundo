@@ -27,14 +27,8 @@ jobs:
       - name: Install node
         run: npm install node
       - name: Install sf cli 
-        run: npm install @salesforce/cli --global 
-      - name: VERSION
-        run: sf --version
-      - name: Set env var
-        run: sf env var set =
+        run: npm install @salesforce/cli --global  
       - name: Auth Dev Hub
-        run: sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt --set-default-dev-hub
-        env: 
-          SF_ACCESS_TOKEN: 00DWV000000xVuD!AQEAQB_vMbhQVg6uTXLm02fvOPPZjQuBH.7IcyistlV2fvbGZDdS2wLKo9keTinW4H0YKnnoin20VYVk2hcmTm.MdxY5Yo0Y
+        run: SF_ACCESS_TOKEN=00DWV000000xVuD!AQEAQB_vMbhQVg6uTXLm02fvOPPZjQuBH.7IcyistlV2fvbGZDdS2wLKo9keTinW4H0YKnnoin20VYVk2hcmTm.MdxY5Yo0Y sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt --set-default-dev-hub 
       - name: Create scratch
         run: sfdx org:create:scratch --definition-file ./config/project-scratch-def.json --alias deployTestScratch --duration-days 1 --set-default --json
