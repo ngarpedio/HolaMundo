@@ -39,4 +39,4 @@ jobs:
       - name: Install SF CLI
         run: npm install @salesforce/cli --global 
       - name: Auth Dev Hub
-        run: SFDX_ACCESS_TOKEN=00DWV000000xVuD>!<OdFFB0hs6LYw2ZaeuS6kIvmJF sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt
+        run: SFDX_ACCESS_TOKEN=00DWV000000xVuD!OdFFB0hs6LYw2ZaeuS6kIvmJF sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt
