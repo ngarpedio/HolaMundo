@@ -24,9 +24,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3 
-      - name: Install dependencies
+      - name: Install node
         run: npm install node
-      - name: Install SF CLI
+      - name: Install sf cli 
         run: npm install @salesforce/cli --global 
       - name: VERSION
         run: sf --version
