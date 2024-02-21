@@ -38,7 +38,7 @@ jobs:
         run: npm install node
       - name: Install SF CLI
         run: npm install @salesforce/cli --global
-      - name: Run sf devhub org login
-        run: SF_ACCESS_TOKEN=00DDE0000043m6B!OdFFB0hs6LYw2ZaeuS6kIvmJF sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt
-      - name: create scratch
-        run: sf org create scratch --definition-file matrix-scratch-def.json --set-default --duration-days 3
+      - name: Set access token
+        run: sf env var set SF_ACCESS_TOKEN=00DWV000000xVuD!OdFFB0hs6LYw2ZaeuS6kIvmJF 
+      - name: Auth Dev Hub
+        run: sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt
