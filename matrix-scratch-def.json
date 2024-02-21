@@ -1,0 +1,22 @@
+{
+    "orgName": "Arpedio Sales Dev",
+    "edition": "Enterprise", 
+    "settings": {
+        "securitySettings": {
+            "sessionSettings": {
+                "sessionTimeout": "TwelveHours"
+            },
+            "enableAdminLoginAsAnyUser": true
+        },
+        "apexSettings": {
+            "enableCompileOnDeploy": false
+        },
+        "mobileSettings": {
+            "enableS1EncryptedStoragePref2": false
+        },
+        "languageSettings": {
+            "enableTranslationWorkbench": true
+        }
+    },
+    "features" : ["ProviderFreePlatformCache","ForceComPlatform"]
+}
