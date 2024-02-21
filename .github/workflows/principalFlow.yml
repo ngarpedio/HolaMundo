@@ -30,7 +30,7 @@ jobs:
           
       - name: INSTALL SFDX 
         run: |
-          npm install salesforce/cli --global
+          npm install @salesforce/cli --global
           sfdx --version
           
       - name: Auth Dev Hub
