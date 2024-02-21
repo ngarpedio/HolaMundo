@@ -39,7 +39,7 @@ jobs:
       - name: Install SF CLI
         run: npm install @salesforce/cli --global 
       - name: Auth Dev Hub
-        run: SF_ACCESS_TOKEN=00DWV000000xVuD!AQEAQB_vMbhQVg6uTXLm02fvOPPZjQuBH.7IcyistlV2fvbGZDdS2wLKo9keTinW4H0YKnnoin20VYVk2hcmTm.MdxY5Yo0Y sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt
+        run: SF_ACCESS_TOKEN=00DWV000000xVuD!AQEAQB_vMbhQVg6uTXLm02fvOPPZjQuBH.7IcyistlV2fvbGZDdS2wLKo9keTinW4H0YKnnoin20VYVk2hcmTm.MdxY5Yo0Y sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --no-prompt --set-default-dev-hub
       - name: Create scratch
         run: sf org create scratch --definition-file ./matrix-scratch-def.json --alias deployTestScratch --set-default --duration-days 1
       - name: Deploy solution
