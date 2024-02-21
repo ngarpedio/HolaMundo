@@ -1,8 +1,5 @@
 {
   "orgName": "Demo company", 
-    "edition": "Enterprise",
-    "features": [
-      ],
-    "settings": {
-    }
+  "edition": "Enterprise",
+  "features": [ ] 
 }
