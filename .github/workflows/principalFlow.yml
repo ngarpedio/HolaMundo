@@ -26,6 +26,8 @@ jobs:
       - name: CHECKOUT CURRENT REPOSITORY IN VIRTUAL MACHINE
         uses: actions/checkout@v3
           
+      - name: UPDATE
+        run: sudo apt update
       - name: NODE INSTALL 
         run: sudo apt install Node.js
       - name: Node Version
