@@ -26,11 +26,16 @@ jobs:
       - name: CHECKOUT CURRENT REPOSITORY IN VIRTUAL MACHINE
         uses: actions/checkout@v3
           
-      - name: NODE INSTALL OVERWRITE FOR ISSUE https://github.com/forcedotcom/cli/issues/2125
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.18.0'
-          
+      - name: UPDATE
+        run: sudo apt update
+      - name: NODE INSTALL 
+        run: sudo apt install nodejs
+      - name: Node Version
+        run:  node -v
+      - name: NPM INSTALL 
+        run: sudo apt install npm 
+      - name: NPM Version
+        run: npm --version 
       - name: INSTALL SFDX 
         run: npm install -g sfdx-cli
       - name: Version
