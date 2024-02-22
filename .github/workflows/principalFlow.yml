@@ -38,6 +38,13 @@ jobs:
         run: npm --version 
       - name: INSTALL SFDX 
         run: npm install -g sfdx-cli
+      - name: Install Salesforce CLI
+        run: |
+          wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+          mkdir sfdx
+          tar xJf sfdx-linux-amd64.tar.xz -C sfdx --strip-components 1
+          ./sfdx/install
+          echo $HOME/.local/bin >> $GITHUB_PATH
       - name: Version
         run: sf --version  
       - name: Auth Dev Hub
