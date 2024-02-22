@@ -32,7 +32,7 @@ jobs:
           node-version: '18.18.0'
           
       - name: INSTALL SFDX 
-        run: npm install @salesforce/cli@2.24.4 --global
+        run: npm install -g sfdx-cli
       - name: Version
         run: sf --version  
       - name: Auth Dev Hub
