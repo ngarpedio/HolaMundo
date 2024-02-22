@@ -37,6 +37,8 @@ jobs:
         run: sf --version  
       - name: Auth Dev Hub
         run: SF_ACCESS_TOKEN=00DWV000000xVuD!AQEAQIijb39aOtx.7okcJSF1C4Zc5rX1Fkmu6VR67y5SLlWi9Q5rbrj4gqhxtdVzKMrgjM7pQv.iJ3F4YHBhZqJ61uCvpzBo sf org login access-token --instance-url https://arpedio3-dev-ed.develop.lightning.force.com --alias devHub --no-prompt --set-default-dev-hub 
+      - name: Set execute permissions
+        run: chmod +x ./Scratch.sh
       - name: Create scratch
         run: ./Scratch.sh
 
