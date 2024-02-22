@@ -29,7 +29,7 @@ jobs:
       - name: UPDATE
         run: sudo apt update
       - name: NODE INSTALL 
-        run: sudo apt install Node.js
+        run: sudo apt install nodejs
       - name: Node Version
         run:  Node.js -v
       - name: NPM INSTALL 
