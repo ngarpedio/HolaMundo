@@ -26,17 +26,25 @@ jobs:
       - name: CHECKOUT CURRENT REPOSITORY IN VIRTUAL MACHINE
         uses: actions/checkout@v3
           
-      - name: NODE INSTALL OVERWRITE FOR ISSUE https://github.com/forcedotcom/cli/issues/2125
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.18.0'
+      - name: NODE INSTALL
+        run: npm install node
           
       - name: INSTALL SFDX 
-        run: npm install @salesforce/cli@2.24.4 --global
-      - name: Version
-        run: sf --version  
-      - name: Auth Dev Hub
+        run: npm install @salesforce/cli --global 
+      
+      - name: AUTH DEV HUB
         run: sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file server.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
-      - name: Create scratch
-        run: sf org create scratch --edition enterprise  --alias MyScratchOrg --duration-days 1
+      
+      - name: CREATE SCRATCH
+        run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default
+        
+      - name: DEPLOY 
+        run: sf project deploy start --target-org TestDeployScratch
+        
+      - name: RUN TESTS
+        run: sf apex run test --target-org TestDeployScratch
 
+      - name: DELETE SCRATCH
+        run: sf org delete scratch --target-org TestDeployScratch
+
+      
