@@ -39,7 +39,7 @@ jobs:
         run: sf limits api display --target-org devHub
         
       - name: CREATE SCRATCH
-        run: authorize_scratch.sh
+        run: ./authorize_scratch.sh
         
       - name: VALIDATE DEPLOY AND RUN ALL TESTS
         run: sf project deploy validate --async --test-level RunAllTestsInOrg --target-org TestDeployScratch
