@@ -35,6 +35,9 @@ jobs:
       - name: AUTH DEV HUB
         run: sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file server.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
       
+      - name: SCRATCH ORG ALLOCATIONS
+        run: sf limits api display --target-org devHub
+        
       - name: CREATE SCRATCH
         run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default
         
