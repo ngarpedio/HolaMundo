@@ -41,7 +41,7 @@ jobs:
       - name: CREATE SCRATCH
         run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default
         
-      - name: DEPLOY 
+      - name: DEPLOY
         run: sf project deploy start --target-org TestDeployScratch
         
       - name: RUN TESTS
