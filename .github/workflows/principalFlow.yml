@@ -39,15 +39,9 @@ jobs:
         run: sf limits api display --target-org devHub
         
       - name: CREATE SCRATCH
-        run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default
+        run: authorize_scratch.sh
         
-      - name: DEPLOY
-        run: sf project deploy start --target-org TestDeployScratch
-        
-      - name: RUN TESTS
-        run: sf apex run test --target-org TestDeployScratch
-
-      - name: DELETE SCRATCH
-        run: sf org delete scratch --target-org TestDeployScratch
+      - name: VALIDATE DEPLOY AND RUN ALL TESTS
+        run: sf project deploy validate --async --test-level RunAllTestsInOrg --target-org TestDeployScratch
 
       
