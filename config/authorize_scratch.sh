@@ -19,7 +19,7 @@ scratch_org_id=$(echo "$scratch_org_id" | json "result.records['0'].Id")
 
 if [ -n "$scratch_org_id" ]; then
   echo "Scratch org found, setting as default" 
-  sfdx force:config:set defaultusername="$scratchOrgId"
+  sf config set target-org "$scratchOrgId"
 else
   echo "Scratch org is not there, creating a new one"
   # Crear la scratch org
