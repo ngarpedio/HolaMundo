@@ -44,11 +44,12 @@ jobs:
       - name: Run Salesforce CLI command
         id: create-scratch
         run: |
-            sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json)
+          echo "::set-output name=result::${output}"
 
       - name: Save JSON Result
-        run: echo "${{ steps.create-scratch.outputs.stdout }}" > result.json
-        
+        run: echo "${{ steps.create-scratch.outputs.result }}" > result.json
+    
       - name: Save JSON to Repository
         uses: actions/upload-artifact@v2
         with:
