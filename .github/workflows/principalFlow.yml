@@ -42,9 +42,18 @@ jobs:
         run: sf limits api display --target-org devHub
         
       - name: CREATE SCRATCH
-        run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default --json > config/newlyCreatedScratch.json
-        
-      - name: VALIDATE DEPLOY AND RUN ALL TESTS
-        run: sf project deploy validate --async --test-level RunAllTestsInOrg --target-org TestDeployScratch
-
+        run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default --json > result.json
       
+      - name: Save JSON to Repository
+        uses: actions/upload-artifact@v2
+        with:
+          name: json-result
+          path: result.json
+
+      - name: DELETE SCRATCH ORG
+        run: sf org delete --target-org TestDeployScratch --noprompt
+
+      - name: SCRATCH ORG ALLOCATIONS
+        run: sf limits api display --target-org devHub
+    
+
