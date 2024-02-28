@@ -41,11 +41,19 @@ jobs:
       - name: SCRATCH ORG ALLOCATIONS
         run: sf limits api display --target-org devHub
         
-      - name: CREATE SCRATCH
-        run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default --json > result.json
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
-      
+      - name: Run Salesforce CLI command
+        id: create-scratch
+       run: |
+        sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json
+
+      - name: Save JSON Result
+        run: echo "${{ steps.create-scratch.outputs.stdout }}" > result.json
+        
+      - name: Save JSON to Repository
+        uses: actions/upload-artifact@v2
+        with:
+          name: json-result
+          path: result.json
 
       - name: DELETE SCRATCH ORG
         run: sf org delete --target-org TestDeployScratch --noprompt
