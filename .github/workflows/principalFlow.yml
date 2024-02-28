@@ -43,12 +43,9 @@ jobs:
         
       - name: CREATE SCRATCH
         run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default --json > result.json
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
       
-      - name: Save JSON to Repository
-        uses: actions/upload-artifact@v2
-        with:
-          name: json-result
-          path: result.json
 
       - name: DELETE SCRATCH ORG
         run: sf org delete --target-org TestDeployScratch --noprompt
