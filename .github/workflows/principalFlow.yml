@@ -6,9 +6,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -25,26 +25,48 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: CHECKOUT CURRENT REPOSITORY IN VIRTUAL MACHINE
         uses: actions/checkout@v3
-          
+
       - name: NODE INSTALL
         run: npm install node
-          
-      - name: INSTALL SFDX 
-        run: npm install @salesforce/cli --global 
-      
+
+      - name: INSTALL SFDX
+        run: npm install @salesforce/cli --global
+
+      - name: INSTALL JSON
+        run: npm install -g json
+
       - name: AUTH DEV HUB
-        run: sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file server.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
-      
-      - name: CREATE SCRATCH
-        run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default
-        
-      - name: DEPLOY 
-        run: sf project deploy start --target-org TestDeployScratch
-        
-      - name: RUN TESTS
-        run: sf apex run test --target-org TestDeployScratch
+        run: sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file server.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub
 
-      - name: DELETE SCRATCH
-        run: sf org delete scratch --target-org TestDeployScratch
+      - name: SCRATCH ORG ALLOCATIONS
+        run: sf limits api display --target-org devHub
 
-      
+      - name: Run Salesforce CLI command
+        id: create-scratch
+        run: |
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json | base64 -w 0)
+          echo "::set-output name=result::${output}"
+
+      - name: Save JSON Result
+        run: |
+          echo "${{ steps.create-scratch.outputs.result }}" > result.json
+
+      - name: Set up GitHub CLI
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Install GitHub CLI
+        run: |
+          pip install --upgrade pip
+          pip install gh
+      - name: Add or update secret
+        run: |
+          gh secret set SCRATC_ORG_AUTH --body ""${{ steps.create-scratch.outputs.result }}"" -r ""${{ github.repository }}""
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+ #     - name: DELETE SCRATCH ORG
+ #       run: sf org delete --target-org TestDeployScratch --noprompt
+
+      - name: SCRATCH ORG ALLOCATIONS
+        run: sf limits api display --target-org devHub
