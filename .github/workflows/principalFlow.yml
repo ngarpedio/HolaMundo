@@ -61,7 +61,7 @@ jobs:
           pip install gh
       - name: Add or update secret
         run: |
-          gh secret set SCRATC_ORG_AUTH --body "${{ steps.create-scratch.outputs.result }}" -r "${{ github.repository }}"
+          gh secret set SCRATC_ORG_AUTH --body ""${{ steps.create-scratch.outputs.result }}"" -r ""${{ github.repository }}""
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
