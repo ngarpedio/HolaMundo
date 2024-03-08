@@ -59,9 +59,12 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install gh
+      - name: Install jq
+        run: |
+            sudo apt-get install jq
       - name: Add or update secret
         run: |
-          gh secret set SCRATC_ORG_AUTH --body="${{ steps.create-scratch.outputs.result }}" --repository="${{ github.repository }}"
+          gh secret set SCRATCH_ORG_AUTH --body="$(echo '${{ steps.create-scratch.outputs.result }}' | jq -c '.' | tr -d '\n')" --repository="${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
