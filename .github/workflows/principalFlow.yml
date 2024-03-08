@@ -61,13 +61,12 @@ jobs:
           pip install gh
       - name: Add or update secret
         run: |
-          gh secret set SCRATC_ORG_AUTH --body="${{ steps.create-scratch.outputs.result }}" --repository="${{ github.repository }}"
+          gh secret set SCRATC_ORG_AUTH --body "${{ steps.create-scratch.outputs.result }}" -r "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: DELETE SCRATCH ORG
-        run: sf org delete --target-org TestDeployScratch --noprompt
+ #     - name: DELETE SCRATCH ORG
+ #       run: sf org delete --target-org TestDeployScratch --noprompt
 
       - name: SCRATCH ORG ALLOCATIONS
         run: sf limits api display --target-org devHub
-  
