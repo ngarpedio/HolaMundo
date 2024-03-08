@@ -44,7 +44,7 @@ jobs:
       - name: Run Salesforce CLI command
         id: create-scratch
         run: |
-          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json)
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json | base64 -w 0)
           echo "::set-output name=result::${output}"
 
       - name: Save JSON Result
@@ -59,12 +59,9 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install gh
-      - name: Install jq
-        run: |
-            sudo apt-get install jq
       - name: Add or update secret
         run: |
-          gh secret set SCRATCH_ORG_AUTH --body="$(echo '${{ steps.create-scratch.outputs.result }}' | jq -c '.' | tr -d '\n')" --repository="${{ github.repository }}"
+          gh secret set SCRATC_ORG_AUTH --body="${{ steps.create-scratch.outputs.result }}" --repository="${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
