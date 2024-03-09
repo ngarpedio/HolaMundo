@@ -22,9 +22,10 @@ jobs:
         with:
           python-version: "3.x"
       - name: Install GitHub CLI
-        run: |
-          pip install --upgrade pip
-          brew install gh
+        run: | 
+          sudo apt update
+          sudo apt install gh
+#          pip install --upgrade pip
 #          pip install gh==2.45.0
       - name: Add or update secret
         run: | 
