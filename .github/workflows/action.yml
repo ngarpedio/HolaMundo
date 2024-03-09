@@ -24,7 +24,8 @@ jobs:
       - name: Install GitHub CLI
         run: |
           pip install --upgrade pip
-          pip install gh==2.45.0
+#          pip install gh==2.45.0
+          brew install gh
       - name: Add or update secret
         run: | 
           gh help secret set
