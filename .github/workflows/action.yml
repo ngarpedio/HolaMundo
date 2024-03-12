@@ -32,5 +32,5 @@ jobs:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
       - name : decode secret
         run: |
-          echo "${{ secrets.MY_SECRET }}" |  base64 --decode > secret.json 
+          echo "${{ secrets.SCRATC_ORG_AUTH }}" |  base64 --decode > secret.json 
         shell: bash
