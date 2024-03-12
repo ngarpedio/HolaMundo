@@ -33,4 +33,5 @@ jobs:
       - name : decode secret
         run: |
           echo "${{ secrets.SCRATC_ORG_AUTH }}" |  base64 --decode > secret.json 
+          cat secret.json
         shell: bash
