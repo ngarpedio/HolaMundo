@@ -30,6 +30,6 @@ jobs:
       - name: Add or update secret
         run: | 
           gh help secret set
-          gh secret set SCRATCH_ORG_AUTH --body="ewogICJzdGF0dXMiOiAwLAogICJyZXN1bHQiOiB7CiAgICAidXNlcm5hbWUiOiAidGVzdC1pNWF2cnJ6ZmpteHVAZXhhbXBsZS5jb20iLAo="
+          gh secret set SCRATC_ORG_AUTH --body="ewogICJzdGF0dXMiOiAwLAogICJyZXN1bHQiOiB7CiAgICAidXNlcm5hbWUiOiAidGVzdC1pNWF2cnJ6ZmpteHVAZXhhbXBsZS5jb20iLAo="
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
