@@ -42,7 +42,10 @@ jobs:
           CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
           echo "ConnectedAppConsumerKey is: $CONSUMER_KEY"
         shell: bash
-
+      - name: use key
+        run: |
+          cat /home/runner/work/HolaMundo/HolaMundo/server.key
+          gh secret set SCRATC_ORG_KEY --body=$(cat "PRIVATE_KEY")
 
         
 

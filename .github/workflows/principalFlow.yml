@@ -30,15 +30,34 @@ jobs:
         run: sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file server.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
       
       - name: CREATE SCRATCH
-        run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default
-        
-      - name: DEPLOY 
-        run: sf project deploy start --target-org TestDeployScratch
-        
-      - name: RUN TESTS
-        run: sf apex run test --target-org TestDeployScratch
+        run: |
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json | base64 -w 0)
+          echo "::set-output name=result::${output}"
 
-      - name: DELETE SCRATCH
-        run: sf org delete scratch --target-org TestDeployScratch
+      - name: Add or update secret
+        run: |
+            gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+    
+      - name: install jq
+        run: |
+          sudo apt-get install jq
+      - name : decode secret
+        run: |
+          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}")
+          PRIVATE_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.privateKey')
+          echo "authFields.privateKey is: $PRIVATE_KEY"
+        shell: bash
+      - name: store key as secret
+        run: |
+          gh secret set SCRATC_ORG_KEY --body=$(cat "PRIVATE_KEY")
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}          
+      
+      - name: echo key
+        run: |
+          export KEY_SECRET=$(echo "${{ secrets.SCRATC_ORG_KEY }}")
+          echo "OUR KEY  is: $KEY_SECRET"
 
       
