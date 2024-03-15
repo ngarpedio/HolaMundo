@@ -30,6 +30,7 @@ jobs:
         run: sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file server.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
       
       - name: CREATE SCRATCH
+        id: create-scratch
         run: |
           output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json)
           echo "::set-output name=result::${output}"
@@ -55,7 +56,7 @@ jobs:
         shell: bash
       - name: store key as secret
         run: |
-          gh secret set SCRATC_ORG_KEY --body=$(cat "PRIVATE_KEY")
+          gh secret set SCRATC_ORG_KEY --body=$(cat PRIVATE_KEY)
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}          
       
