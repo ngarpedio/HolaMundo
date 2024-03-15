@@ -32,8 +32,8 @@ jobs:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
       - name : decode secret
         run: |
-          echo "${{ secrets.SCRATC_ORG_AUTH }}" |  base64 --decode > scratchInfo
-          cat scratchInfo.scratchOrgInfo.ConnectedAppConsumerKey
+          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
+          echo "$DECODED_SECRET"
         shell: bash
 
         
