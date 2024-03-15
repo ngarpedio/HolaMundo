@@ -50,7 +50,7 @@ jobs:
           sudo apt-get install jq
       - name : decode secret
         run: |
-          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 -d)
+          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" |  base64 --decode)
           PRIVATE_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.privateKey')
           echo "authFields.privateKey is: $PRIVATE_KEY"
         shell: bash
