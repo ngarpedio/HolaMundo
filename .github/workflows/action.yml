@@ -33,7 +33,8 @@ jobs:
       - name : decode secret
         run: |
           export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
-          echo "$DECODED_SECRET"
+          echo "$DECODED_SECRET.scratchOrgInfo.ConnectedAppConsumerKey"
+          echo "$DECODED_SECRET.authFields.privateKey"
         shell: bash
 
         
