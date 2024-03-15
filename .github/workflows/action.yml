@@ -37,9 +37,10 @@ jobs:
         run: |
           export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
           echo "decoded secret is: $DECODED_SECRET"
-          PRIVATE_KEY=$(echo "$DECODED_SECRET" | jq -r 'result.authFields.privateKey')
+          PRIVATE_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.privateKey')
           echo "authFields.privateKey is: $PRIVATE_KEY"
-          CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r 'result.scratchOrgInfo.ConnectedAppConsumerKey')
+          CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
+          echo "ConnectedAppConsumerKey is: $CONSUMER_KEY"
         shell: bash
 
 
