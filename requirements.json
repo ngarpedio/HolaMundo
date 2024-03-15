@@ -1,0 +1,5 @@
+"ConnectedAppConsumerKey"
+"username"
+"instanceURL"
+sf org login jwt --client-id {result.scratchOrgInfo.ConnectedAppConsumerKey} --jwt-key-file {result.authFields.privateKey} --username {result.authFields.username} --instanceurl {result.authFields.instanceUrl}
+{result.authFields.privateKey} Este en el momento de creacion deberiamos guardarlo en un secret y despues para autorizar traerlo desde ese secret
