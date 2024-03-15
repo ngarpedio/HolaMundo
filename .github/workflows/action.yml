@@ -36,8 +36,8 @@ jobs:
       - name : decode secret
         run: |
           export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
-          PRIVATE_KEY=$(echo "$DECODED_SECRET" | jq -r '.authFields.privateKey')
-          echo " authFields.privateKey is: $PRIVATE_KEY"
+          PRIVATE_KEY=$(echo "$DECODED_SECRET" | jq -r 'result.authFields.privateKey')
+          echo "authFields.privateKey is: $PRIVATE_KEY"
         shell: bash
 
         
