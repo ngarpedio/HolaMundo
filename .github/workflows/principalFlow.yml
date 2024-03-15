@@ -31,8 +31,12 @@ jobs:
       
       - name: CREATE SCRATCH
         run: |
-          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json | base64 -w 0)
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json)
           echo "::set-output name=result::${output}"
+
+      - name: Save JSON Result
+        run: |
+          echo "${{ steps.create-scratch.outputs.result }}" > result.json
 
       - name: Add or update secret
         run: |
