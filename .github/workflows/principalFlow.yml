@@ -32,7 +32,7 @@ jobs:
       - name: CREATE SCRATCH
         id: create-scratch
         run: |
-          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json)
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json | base64 -w 0)
           echo "::set-output name=result::${output}"
 
       - name: Save JSON Result
@@ -50,7 +50,7 @@ jobs:
           sudo apt-get install jq
       - name : decode secret
         run: |
-          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}")
+          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 -d)
           PRIVATE_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.privateKey')
           echo "authFields.privateKey is: $PRIVATE_KEY"
         shell: bash
