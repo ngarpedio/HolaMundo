@@ -64,5 +64,7 @@ jobs:
         run: |
           export KEY_SECRET=$(echo "${{ secrets.SCRATC_ORG_KEY }}")
           echo "OUR KEY  is: $KEY_SECRET"
+    # ensure you have the key in the correct format
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
       
