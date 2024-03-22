@@ -43,8 +43,8 @@ jobs:
         shell: bash   
       - name: AUTH SCRATCH ORG
         run: |
-          echo "${{ secrets.SCRATC_ORG_KEY }}" > scratchorgkey.key
-          sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file scratchorgkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
+          echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+          sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
         shell: bash           
 
         
