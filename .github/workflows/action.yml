@@ -37,14 +37,14 @@ jobs:
         run: |
           export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
           echo "decoded secret is: $DECODED_SECRET"
-          PRIVATE_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.privateKey')
-          echo "authFields.privateKey is: $PRIVATE_KEY"
+          PRIVATE_KEY_PATH=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.privateKey')
+          echo "authFields.privateKey is: $PRIVATE_KEY_PATH"
           CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
           echo "ConnectedAppConsumerKey is: $CONSUMER_KEY"
         shell: bash
-      - name: use key
+      - name: use key to save path content to secret
         run: |
-          gh secret set SCRATC_ORG_KEY --body=$(cat $PRIVATE_KEY)
+          gh secret set SCRATC_ORG_KEY --body=$(cat $PRIVATE_KEY_PATH)
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}    
 
