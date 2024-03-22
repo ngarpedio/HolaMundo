@@ -45,6 +45,8 @@ jobs:
       - name: use key
         run: |
           gh secret set SCRATC_ORG_KEY --body=$(cat $PRIVATE_KEY)
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}    
 
         
 
