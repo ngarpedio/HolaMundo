@@ -28,7 +28,7 @@ jobs:
       
       - name: AUTH DEV HUB
         run: |
-          "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+          echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
           CLIENT_ID=${{ secrets.DEVHUB_CLIENTID}}
           sf org login jwt --client-id $CLIENT_ID --jwt-key-file devhubkey.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
       
