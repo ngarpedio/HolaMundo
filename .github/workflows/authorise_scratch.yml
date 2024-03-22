@@ -40,9 +40,6 @@ jobs:
           echo "Username is: $USERNAME"
           INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
           echo "Instance Url is: $INSTANCE_URL"
-        shell: bash   
-      - name: AUTH SCRATCH ORG
-        run: |
           echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
           sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
         shell: bash           
