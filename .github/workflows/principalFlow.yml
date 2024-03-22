@@ -58,9 +58,9 @@ jobs:
         shell: bash
       - name: store content of the key path as a secret
         run: |
-          echo "$(cat $PRIVATE_KEY_PATH)" 
           SCRATCH_ORG_KEY=$(cat $PRIVATE_KEY_PATH)
           gh secret set SCRATC_ORG_KEY --body=$SCRATCH_ORG_KEY
+          echo "$(cat $PRIVATE_KEY_PATH)" 
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}          
       - name: echo key after saving it in secrets
