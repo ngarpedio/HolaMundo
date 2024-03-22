@@ -34,9 +34,9 @@ jobs:
           echo "decoded secret is: $DECODED_SECRET"
           CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
           echo "Consumer key is: $CONSUMER_KEY"
-          USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username'
+          USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username')
           echo "Username is: $USERNAME"
-          INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl'
+          INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
           echo "Instance Url is: $INSTANCE_URL"
 
         shell: bash
