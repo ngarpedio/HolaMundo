@@ -32,7 +32,7 @@ jobs:
       - name: CREATE SCRATCH
         id: create-scratch
         run: |
-          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 1 --set-default --json | base64 -w 0)
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 10 --set-default --json | base64 -w 0)
           echo "::set-output name=result::${output}"
 
       - name: Save JSON Result
@@ -59,7 +59,7 @@ jobs:
           gh secret set SCRATC_ORG_KEY --body=$(cat $PRIVATE_KEY_PATH)
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}          
-      - name: echo key
+      - name: echo key after saving it in secrets
         run: |
           export KEY_SECRET=$(echo "${{ secrets.SCRATC_ORG_KEY }}" |  base64 --decode)
           echo "OUR KEY  is: $KEY_SECRET"
