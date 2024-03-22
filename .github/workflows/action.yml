@@ -44,8 +44,7 @@ jobs:
         shell: bash
       - name: use key
         run: |
-          cat /home/runner/work/HolaMundo/HolaMundo/server.key
-          gh secret set SCRATC_ORG_KEY --body=$(cat "PRIVATE_KEY")
+          gh secret set SCRATC_ORG_KEY --body=$(cat $PRIVATE_KEY)
 
         
 
