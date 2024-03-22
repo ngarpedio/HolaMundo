@@ -28,6 +28,8 @@ jobs:
       - name: install jq
         run: |
           sudo apt-get install jq
+      - name: INSTALL SFDX 
+        run: npm install @salesforce/cli --global 
       - name : decode secret
         run: |
           export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
@@ -38,13 +40,7 @@ jobs:
           echo "Username is: $USERNAME"
           INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
           echo "Instance Url is: $INSTANCE_URL"
-
-        shell: bash
-      - name: use key to save path content to secret
-        run: |
-          gh secret set SCRATC_ORG_KEY --body=$(cat $PRIVATE_KEY_PATH)
-        env:
-          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}    
+        shell: bash   
       - name: AUTH SCRATCH ORG
         run: |
           echo "${{ secrets.SCRATC_ORG_KEY }}" > scratchorgkey.key
