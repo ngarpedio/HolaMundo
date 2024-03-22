@@ -1,0 +1,36 @@
+      - name: CREATE SCRATCH
+        id: create-scratch
+        run: |
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 10 --set-default --json | base64 -w 0)
+          echo "::set-output name=result::${output}"
+
+      - name: Save JSON Result
+        run: |
+          echo "${{ steps.create-scratch.outputs.result }}" > result.json
+
+      - name: Add or update secret
+        run: |
+            gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+    
+      - name: install jq
+        run: |
+          sudo apt-get install jq
+      - name : decode base64 secret
+        run: |
+          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" |  base64 --decode)
+          PRIVATE_KEY_PATH=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.privateKey')
+          echo "private key path is: $PRIVATE_KEY_PATH"
+        shell: bash
+      - name: store content of the key path as a secret
+        run: |
+          gh secret set SCRATC_ORG_KEY --body=$(cat $PRIVATE_KEY_PATH)
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}          
+      - name: echo key after saving it in secrets
+        run: |
+          export KEY_SECRET=$(echo "${{ secrets.SCRATC_ORG_KEY }}" |  base64 --decode)
+          echo "OUR KEY  is: $KEY_SECRET"
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}

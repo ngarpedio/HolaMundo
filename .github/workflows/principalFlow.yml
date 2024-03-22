@@ -27,7 +27,9 @@ jobs:
         run: npm install @salesforce/cli --global 
       
       - name: AUTH DEV HUB
-        run: sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file "${{secrets.DEVHUB_KEY}}"" --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
+        run: |
+          echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+          sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file devhubkey.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
       
 
 
