@@ -46,19 +46,27 @@ jobs:
           CLIENT_ID=${{ secrets.DEVHUB_CLIENTID}}
           sf org login jwt --client-id $CLIENT_ID --jwt-key-file devhubkey.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
 
-      - name : authorise scratch
+      - name: Decode secret
+        id: decode-secret
+        run: |
+            echo "DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)" >> $GITHUB_ENV
+        shell: bash
+        continue-on-error: true
+        
+      - name: Extract values
+        id: extract-values
+        run: |
+            echo "CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')" >> $GITHUB_ENV
+            echo "USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username')" >> $GITHUB_ENV
+            echo "INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')" >> $GITHUB_ENV
+        shell: bash
+        continue-on-error: true
+        
+      - name: Authorise scratch
         id: authorise-scratch
         run: |
-          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
-          echo "decoded secret is: $DECODED_SECRET"
-          CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
-          echo "Consumer key is: $CONSUMER_KEY"
-          USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username')
-          echo "Username is: $USERNAME"
-          INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
-          echo "Instance Url is: $INSTANCE_URL + ' ' + succesfully authorised scratch org"
-          echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
-          sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
+            echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+            sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
         shell: bash
         continue-on-error: true
 
@@ -80,6 +88,8 @@ jobs:
         if: always() && (steps.authorise-scratch.conclusion != 'success')
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-    
 
-    
+      - name: try DEPLOY and execute tests
+        run: sf project deploy start --dry-run  --test-level RunAllTestsInOrg
+
+
