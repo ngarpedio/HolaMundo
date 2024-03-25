@@ -32,7 +32,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gh
-          
+
       - name: install jq
         run: |
           sudo apt-get install jq
@@ -71,12 +71,12 @@ jobs:
       - name: Save JSON Result
         run: |
           echo "${{ steps.create-scratch.outputs.result }}" > result.json
-        if: steps.authorise-scratch.conclusion != 'success'
+        if: always() && (steps.authorise-scratch.conclusion != 'success')
 
       - name: Add or update secret
         run: |
             gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
-        if: steps.authorise-scratch.conclusion != 'success'
+        if: always() && (steps.authorise-scratch.conclusion != 'success')
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
     
