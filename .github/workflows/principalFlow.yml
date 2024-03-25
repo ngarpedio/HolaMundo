@@ -68,7 +68,6 @@ jobs:
             echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
             sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
         shell: bash
-        continue-on-error: true
 
       - name: CREATE SCRATCH
         id: create-scratch
@@ -91,5 +90,6 @@ jobs:
 
       - name: try DEPLOY and execute tests
         run: sf project deploy start --dry-run  --test-level RunAllTestsInOrg
+
 
 
