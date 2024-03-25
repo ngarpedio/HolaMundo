@@ -24,7 +24,7 @@ private class HolaMundoTest {
 
     @isTest
     static void HolaMundoTest() {
-        Assert.assertEquals('Hola Mundo', HolaMundo.holaMundo());
+        Assert.areEqual('Hola Mundo', HolaMundo.holaMundo());
         // TO DO: implement unit test
     }
 }

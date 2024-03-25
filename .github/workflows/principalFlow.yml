@@ -66,17 +66,17 @@ jobs:
         run: |
           output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 10 --set-default --json | base64 -w 0)
           echo "::set-output name=result::${output}"
-        if: always() && (steps.authorise-scratch.conclusion != 'success')
+        if: failure() && (steps.authorise-scratch.conclusion != 'success')
 
       - name: Save JSON Result
         run: |
           echo "${{ steps.create-scratch.outputs.result }}" > result.json
-        if: always() && (steps.authorise-scratch.conclusion != 'success')
+        if: failure() && (steps.authorise-scratch.conclusion != 'success')
 
       - name: Add or update secret
         run: |
             gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
-        if: always() && (steps.authorise-scratch.conclusion != 'success')
+        if: failure() && (steps.authorise-scratch.conclusion != 'success')
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
