@@ -27,4 +27,10 @@ private class HolaMundoTest {
         Assert.areEqual('Hola Mundo', HolaMundo.holaMundo());
         // TO DO: implement unit test
     }
+
+    @isTest
+    static void GetApodoTest() {
+        Assert.areEqual(true, String.isNotBlank(HolaMundo.getApodo()));
+        // TO DO: implement unit test
+    }
 }
