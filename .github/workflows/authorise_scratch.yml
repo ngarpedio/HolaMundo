@@ -42,6 +42,6 @@ jobs:
           echo "Instance Url is: $INSTANCE_URL"
           echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
           sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
-        shell: bash           
+        shell: bash
 
         

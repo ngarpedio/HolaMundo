@@ -22,6 +22,20 @@ jobs:
           
       - name: NODE INSTALL
         run: npm install node
+
+      - name: Set up GitHub CLI
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install gh
+          
+      - name: install jq
+        run: |
+          sudo apt-get install jq
           
       - name: INSTALL SFDX 
         run: npm install @salesforce/cli --global 
@@ -31,43 +45,40 @@ jobs:
           echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
           CLIENT_ID=${{ secrets.DEVHUB_CLIENTID}}
           sf org login jwt --client-id $CLIENT_ID --jwt-key-file devhubkey.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
+
+      - name : authorise scratch
+        id: authorise-scratch
+        run: |
+          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
+          echo "decoded secret is: $DECODED_SECRET"
+          CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
+          echo "Consumer key is: $CONSUMER_KEY"
+          USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username')
+          echo "Username is: $USERNAME"
+          INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
+          echo "Instance Url is: $INSTANCE_URL"
+          echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+          sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
+        shell: bash
+
       - name: CREATE SCRATCH
         id: create-scratch
         run: |
           output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 10 --set-default --json | base64 -w 0)
           echo "::set-output name=result::${output}"
+        if: steps.authorise-scratch.conclusion != 'success'
 
       - name: Save JSON Result
         run: |
           echo "${{ steps.create-scratch.outputs.result }}" > result.json
+        if: steps.authorise-scratch.conclusion != 'success'
 
       - name: Add or update secret
         run: |
             gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
+        if: steps.authorise-scratch.conclusion != 'success'
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
     
-      - name: install jq
-        run: |
-          sudo apt-get install jq
-      - name : decode base64 secret
-        run: |
-          export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" |  base64 --decode)
-          PRIVATE_KEY_PATH=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.privateKey')
-          echo "private key path is: $PRIVATE_KEY_PATH"
-        shell: bash
-      - name: store content of the key path as a secret
-        run: |
-          SCRATCH_ORG_KEY=$(cat $PRIVATE_KEY_PATH)
-          gh secret set SCRATC_ORG_KEY --body=$SCRATCH_ORG_KEY
-          echo "$(cat $PRIVATE_KEY_PATH)" 
-        env:
-          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}          
-      - name: echo key after saving it in secrets
-        run: |
-          export KEY_SECRET=$(echo "${{ secrets.SCRATC_ORG_KEY }}")
-          echo "OUR KEY  is: $KEY_SECRET"
-        env:
-          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
     
