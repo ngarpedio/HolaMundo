@@ -38,7 +38,7 @@ jobs:
       
       - name: AUTH DEV HUB
         run: | 
-          sf org login jwt --client-id ${{secrets.DEVHUB_CLIENTID}} --jwt-key-file ${{secrets.DEVHUB_KEY}} --username ${{secrets.DEVHUB_USERNAME}} --alias devHub --set-default-dev-hub  
+          sf org login jwt --client-id ${{secrets.DEVHUB_CLIENTID}} --jwt-key-file ${{secrets.DEVHUB_KEY}} --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
 
       - name : authorise scratch
         id: authorise-scratch
