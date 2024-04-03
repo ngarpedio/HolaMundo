@@ -31,11 +31,7 @@ jobs:
       - name: Install GitHub CLI
         run: |
           sudo apt update
-          sudo apt install gh
-
-      - name: install jq
-        run: |
-          sudo apt-get install jq
+          sudo apt install gh 
           
       - name: INSTALL SFDX 
         run: npm install @salesforce/cli --global 
