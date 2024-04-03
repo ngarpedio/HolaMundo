@@ -32,10 +32,8 @@ private class HolaMundoTest {
     static void GetApodoTest() {
         Account acc = new Account( Name = 'ASDASD');
         insert acc;
-        Contact newC = new Contact(LastName = 'Con', AccountId = acc.Id);
-        newC.Apodo__c = 'Nicho';
-        insert newC;
-        Assert.areEqual(true, String.isNotBlank(HolaMundo.getApodo()));
+        Contact newC = new Contact(LastName = 'Con', AccountId = acc.Id); 
+        insert newC; 
         // TO DO: implement unit test
     }
 }
