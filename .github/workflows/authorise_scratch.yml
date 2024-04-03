@@ -28,27 +28,20 @@ jobs:
       - name: install jq
         run: |
           sudo apt-get install jq
+      - name: INSTALL SFDX 
+        run: npm install @salesforce/cli --global 
       - name : decode secret
         run: |
           export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
           echo "decoded secret is: $DECODED_SECRET"
           CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
           echo "Consumer key is: $CONSUMER_KEY"
-          USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username'
+          USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username')
           echo "Username is: $USERNAME"
-          INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl'
+          INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
           echo "Instance Url is: $INSTANCE_URL"
-
+          echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+          sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
         shell: bash
-      - name: use key to save path content to secret
-        run: |
-          gh secret set SCRATC_ORG_KEY --body=$(cat $PRIVATE_KEY_PATH)
-        env:
-          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}    
-      - name: AUTH SCRATCH ORG
-        run: |
-          echo "${{ secrets.SCRATC_ORG_KEY }}" > scratchorgkey.key
-          sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file scratchorgkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
-        
 
         

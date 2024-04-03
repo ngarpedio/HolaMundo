@@ -22,23 +22,67 @@ jobs:
           
       - name: NODE INSTALL
         run: npm install node
+
+      - name: Set up GitHub CLI
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install gh
+
+      - name: install jq
+        run: |
+          sudo apt-get install jq
           
       - name: INSTALL SFDX 
         run: npm install @salesforce/cli --global 
       
       - name: AUTH DEV HUB
-        run: sf org login jwt --client-id 3MVG9si4IYYQbK9f7D.leWPJNFUvjLZy8eTs9FVP_n4DFhdfr289th0g5PR6deLnsoyFpbNzccgcmgJpNMw4h --jwt-key-file server.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
-      
+        run: |
+          echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+          CLIENT_ID=${{ secrets.DEVHUB_CLIENTID}}
+          sf org login jwt --client-id $CLIENT_ID --jwt-key-file devhubkey.key --username nicholas@arpedio.com --alias devHub --set-default-dev-hub  
+
+      - name : authorise scratch
+        id: authorise-scratch
+        run: |
+            export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
+            echo "decoded secret is: $DECODED_SECRET"
+            CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
+            echo "Consumer key is: $CONSUMER_KEY"
+            USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username')
+            echo "Username is: $USERNAME"
+            INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
+            echo "Instance Url is: $INSTANCE_URL + ' ' + succesfully authorised scratch org"
+            echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+            sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
+        shell: bash
+
       - name: CREATE SCRATCH
-        run: sf org create scratch  --definition-file config/project-scratch-def.json  --alias TestDeployScratch --duration-days 1 --set-default
-        
-      - name: DEPLOY 
-        run: sf project deploy start --target-org TestDeployScratch
-        
-      - name: RUN TESTS
-        run: sf apex run test --target-org TestDeployScratch
+        id: create-scratch
+        run: |
+          output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 10 --set-default --json | base64 -w 0)
+          echo "::set-output name=result::${output}"
+        if: failure() && (steps.authorise-scratch.conclusion != 'success')
 
-      - name: DELETE SCRATCH
-        run: sf org delete scratch --target-org TestDeployScratch
+      - name: Save JSON Result
+        run: |
+          echo "${{ steps.create-scratch.outputs.result }}" > result.json
+        if: failure() && (steps.authorise-scratch.conclusion != 'success')
 
-      
+      - name: Add or update secret
+        run: |
+            gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
+        if: failure() && (steps.authorise-scratch.conclusion != 'success')
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+
+      - name: try DEPLOY and execute tests
+        run: sf project deploy start --dry-run  --test-level RunAllTestsInOrg
+        if: always()
+
+
+
