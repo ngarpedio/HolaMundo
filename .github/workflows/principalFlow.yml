@@ -39,19 +39,23 @@ jobs:
 
       - name: Authorize Scratch Org, Create Scratch, Save JSON Result, Add or update secret
         id: scratch-and-secret
-        env:
-          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
         run: |
+            export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
+            echo "decoded secret is: $DECODED_SECRET"
+            CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
+            echo "Consumer key is: $CONSUMER_KEY"
+            USERNAME=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.username')
+            echo "Username is: $USERNAME"
+            INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
+            echo "Instance Url is: $INSTANCE_URL + ' ' + succesfully authorised scratch org"
+            echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+      
             # Check if Scratch Org exists
-            USERNAME=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode | jq -r '.result.authFields.username')
             SCRATCH_EXISTS=$(sf org list --json | jq -r ".result.scratchOrgs[] | select(.username==\"$USERNAME\") | .username")
             if [ -z "$SCRATCH_EXISTS" ]; then
-                echo "No existing scratch org found. Creating a new one."
                 # Create Scratch Org
                 output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 10 --set-default --json | base64 -w 0)
                 echo "::set-output name=result::${output}"
-                SCRATCH_ORG_ID=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.scratchOrg')
-                echo "Scratch Org ID is: $SCRATCH_ORG_ID"
       
                 # Save JSON Result
                 echo "${output}" > result.json
@@ -59,18 +63,11 @@ jobs:
                 # Add or update secret
                 gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
             else
-                echo "Existing scratch org found. Authenticating to it."
-                export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
-                echo "decoded secret is: $DECODED_SECRET"
-                SCRATCH_ORG_ID=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.scratchOrg')
-                echo "Scratch Org ID is: $SCRATCH_ORG_ID"
-                CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
-                echo "Consumer key is: $CONSUMER_KEY"
-                INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
-                echo "Instance Url is: $INSTANCE_URL + ' ' + succesfully authorised scratch org"
-                echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
+                # Authorize into existing Scratch Org
                 sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
             fi
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
 
       - name: try DEPLOY and execute tests
