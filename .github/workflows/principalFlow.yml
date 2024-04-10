@@ -39,6 +39,8 @@ jobs:
 
       - name: Authorize Scratch Org, Create Scratch, Save JSON Result, Add or update secret
         id: scratch-and-secret
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
         run: |
             # Check if Scratch Org exists
             USERNAME=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode | jq -r '.result.authFields.username')
@@ -63,8 +65,7 @@ jobs:
                 echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key
                 sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
             fi
-          env:
-            GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+
 
       - name: try DEPLOY and execute tests
         run: sf project deploy start --dry-run  --test-level RunAllTestsInOrg
