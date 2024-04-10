@@ -50,6 +50,8 @@ jobs:
                 # Create Scratch Org
                 output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 10 --set-default --json | base64 -w 0)
                 echo "::set-output name=result::${output}"
+                SCRATCH_ORG_ID=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.scratchOrg')
+                echo "Scratch Org ID is: $SCRATCH_ORG_ID"
       
                 # Save JSON Result
                 echo "${output}" > result.json
@@ -60,6 +62,8 @@ jobs:
                 echo "Existing scratch org found. Authenticating to it."
                 export DECODED_SECRET=$(echo "${{ secrets.SCRATC_ORG_AUTH }}" | base64 --decode)
                 echo "decoded secret is: $DECODED_SECRET"
+                SCRATCH_ORG_ID=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.scratchOrg')
+                echo "Scratch Org ID is: $SCRATCH_ORG_ID"
                 CONSUMER_KEY=$(echo "$DECODED_SECRET" | jq -r '.result.scratchOrgInfo.ConnectedAppConsumerKey')
                 echo "Consumer key is: $CONSUMER_KEY"
                 INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
