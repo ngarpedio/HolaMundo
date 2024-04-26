@@ -49,9 +49,12 @@ jobs:
             INSTANCE_URL=$(echo "$DECODED_SECRET" | jq -r '.result.authFields.instanceUrl')
             echo "Instance Url is: $INSTANCE_URL"
             echo "${{ secrets.DEVHUB_KEY }}" > devhubkey.key 
-            echo "Attempting to log into the scratch"
-            sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --alias TestDeployScratch --instanceurl $INSTANCE_URL --set-default --json
-            if [ $? -eq 0 ]; then
+            echo "Attempting to log into the scratch" 
+            LOGIN_RESULT=$(sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --alias TestDeployScratch --instanceurl $INSTANCE_URL --set-default --json)
+
+            # Check if login was successful
+            LOGIN_CODE=$(echo "$LOGIN_RESULT" | jq -r '.code')
+            if [ $LOGIN_CODE -eq 0 ]; then
                 echo "Login successful"
             else
                 echo "Login failed"
@@ -66,7 +69,7 @@ jobs:
                 # Add or update secret
                 gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
                 exit 1
-            fi
+            fi 
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
