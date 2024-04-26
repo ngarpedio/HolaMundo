@@ -67,8 +67,7 @@ jobs:
                 echo "${output}" > result.json
       
                 # Add or update secret
-                gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
-                exit 1
+                gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json") 
             fi 
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
