@@ -64,11 +64,11 @@ jobs:
                 gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
             else
                 # Authorize into existing Scratch Org
-                sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --instanceurl $INSTANCE_URL --set-default --json
+                sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --alias TestDeployScratch --instanceurl $INSTANCE_URL --set-default --json
             fi
         env:
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
 
       - name: try DEPLOY and execute tests
-        run: sf project deploy start --dry-run  --test-level RunAllTestsInOrg
+        run: sf project deploy start --dry-run --target-org TestDeployScratch --test-level RunAllTestsInOrg
