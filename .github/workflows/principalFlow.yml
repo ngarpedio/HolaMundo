@@ -53,7 +53,7 @@ jobs:
             LOGIN_RESULT=$(sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --alias TestDeployScratch --instanceurl $INSTANCE_URL --set-default --json || true)
             echo "LOGIN_RESULT is: $LOGIN_RESULT" 
             # Check if login was successful
-            LOGIN_CODE=$(echo "$LOGIN_RESULT" | jq -r '.code')
+            LOGIN_CODE=$(echo "$LOGIN_RESULT" | jq -r '.status')
             if [ $LOGIN_CODE -eq 0 ]; then
                 echo "Login successful"
             else
