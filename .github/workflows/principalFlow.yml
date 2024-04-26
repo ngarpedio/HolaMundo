@@ -54,6 +54,7 @@ jobs:
             SCRATCH_EXISTS=$(sf org list --json | jq -r ".result.scratchOrgs[] | select(.username==\"$USERNAME\") | .username")
             if [ -z "$SCRATCH_EXISTS" ]; then
                 # Create Scratch Org
+                echo "org does not exist, creating new"
                 output=$(sf org create scratch --definition-file config/project-scratch-def.json --alias TestDeployScratch --duration-days 10 --set-default --json | base64 -w 0)
                 echo "::set-output name=result::${output}"
       
@@ -64,6 +65,7 @@ jobs:
                 gh secret set SCRATC_ORG_AUTH --body=$(cat "result.json")
             else
                 # Authorize into existing Scratch Org
+                echo "org already exists, logging into existing"
                 sf org login jwt --client-id $CONSUMER_KEY --jwt-key-file devhubkey.key --username $USERNAME --alias TestDeployScratch --instanceurl $INSTANCE_URL --set-default --json
             fi
         env:
